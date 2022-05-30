@@ -1,0 +1,39 @@
+Commands
+--------
+
+kubectl apply -f.
+kubectl get deploy
+kubectl scale deploy vote --replicas=4
+kubectl delete po vote-94849dc97-vp9lf
+kubectl get po
+kubectl delete po db-57b8b86bcf-6x5vb
+kubectl get svc
+kubectl logs db-78684db7cd-txf9m
+kubectl logs worker-dd46d7584-ggxrx 
+kubectl logs result-5d57b59f4b-8fvl9
+ 
+Actions and Observations
+-------------------------
+
+Four replicas of the vote pod were created
+Observation -> The voting app is being shown from various container ids ( one of the four container ids)
+One of the pod was deleted
+Observation -> There was no impact on the voting app, the application runs without any issue and when we get the number of pods, there are still 4 pods, where one pod was created automatically.
+The db pod was deleted 
+Observation -> The voting app worked well, but the results did not change. One more db pod got created, but the results were not getting captured.
+			-> The worker pod had restarted
+			-> The db log seemed like it was fine.
+
+Why the result app did not work ->			
+The result app was not getting connected to the DB. The reason why the connection did not happen is because, the socket connection which was established between the result app and the old db doesnt exist anymore because the old DB got deleted, and the connection is not able to establish. 
+
+How it worked again ->
+When we restart the result app, a new socket connection will be established between the result app and the new DB.
+
+Observation -> The old data is gone, so db has to be persisted.
+Jargons
+-------
+Aynchronous connection
+Synchronous socket connection
+Netwokr isolation
+storage isolation
